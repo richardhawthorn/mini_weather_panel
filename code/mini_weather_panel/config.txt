@@ -1,0 +1,14 @@
+wifi network:
+enter_your_network_name_here
+wifi password:
+enter_your_network_password_here
+weather api key:
+enter_your_api_key_here
+location i.e. london,uk (no spaces)
+london,uk
+units (c or f)
+c
+timezone (in hours i.e. -5)
+-5
+refresh rate (minutes, default 30)
+30
