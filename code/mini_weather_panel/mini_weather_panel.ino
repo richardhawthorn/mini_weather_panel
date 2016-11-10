@@ -1,7 +1,8 @@
 /*
- *  Richard Hawthorn
- *  2016/10/6
  *  Weather screen
+ *  Richard Hawthorn
+ *  richardhawthorn.com
+ *  2016-11-6 
  *  
  *  Connect to the Open Weather Map API and display current a daily weather conditions
  */
