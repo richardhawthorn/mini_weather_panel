@@ -238,12 +238,12 @@ void loadConfigFromSD(){
     while (configFile.available()) {
       character = (char) configFile.read();
 
-       //Serial.print((char) configFile.read());
+       Serial.print(character);
 
-      if (character == '\r'){
+      if (character == '\n'){
         line++;
-      } else if (character == '\n'){
-        //do nothing
+      } else if (character == '\r'){
+        //do nothing 
       } else {
       
         if (line == 2){
@@ -263,7 +263,7 @@ void loadConfigFromSD(){
     }
     // close the file:
     configFile.close();
-    
+
   }
 
   /*
@@ -295,10 +295,39 @@ void setupScreens(){
 }
 
 /*
+ * Draw an animation so we know the wifi is connecting
+ */
+void connAnimation(){
+
+  connStep++;
+
+  if (connStep > 4){
+    connStep = 1;
+  }
+
+  clearScreenBuffer();
+
+  matrix.drawBitmap(0, 0, conn, 8, 8, LED_ON);
+
+  if (connStep == 1){
+    matrix.drawBitmap(8, 0, conn1, 8, 8, LED_ON);
+  } else if (connStep == 2){
+    matrix.drawBitmap(8, 0, conn2, 8, 8, LED_ON);
+  } else if (connStep == 3){
+    matrix.drawBitmap(8, 0, conn3, 8, 8, LED_ON);
+  } else if (connStep == 4){
+    matrix.drawBitmap(8, 0, conn4, 8, 8, LED_ON);
+  }
+
+  writeToScreen();
+  
+}
+
+/*
  * Connect to the wifi
  */
 void connectToWifi(){
-
+  
   char ssid[sd_ssid.length()+1]; 
   char password[sd_password.length()+1]; 
 
@@ -314,12 +343,20 @@ void connectToWifi(){
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    connAnimation();
   }
 
   Serial.println("");
   Serial.println("WiFi connected");  
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
+
+  clearScreenBuffer();
+  
+  matrix.drawBitmap(0, 0, conn, 8, 8, LED_ON);
+  matrix.drawBitmap(8, 0, ok, 8, 8, LED_ON);
+
+  writeToScreen();
   
 }
 
@@ -487,7 +524,8 @@ void processCurrentTemp(){
 
   todays_temp = convertTemp(temp);
 
-  updateScreens();
+  //ony update the screen when we have all the data
+  //updateScreens();
   
 }
 
@@ -538,7 +576,7 @@ void processTodaysTemp(){
       Serial.println(result);
   
       if (temp > maxTemp){
-        maxTemp = temp;
+        maxTemp = (float) (int) temp;
       }
       
     }
